@@ -411,4 +411,4 @@ if (owoPlaceholder) {
 updatePlaylist();
 
 // Start first song
-playSong();
+// playSong();
