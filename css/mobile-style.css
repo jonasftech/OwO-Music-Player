@@ -1,0 +1,120 @@
+/* Mobile and Responsive Styles */
+.mobile-music-player {
+    display: none; /* Always hidden by default */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background-color: #000;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    box-sizing: border-box;
+    z-index: 1000;
+  }
+  
+  @media (max-width: 768px) {
+    .desktop-player {
+      display: none !important;
+    }
+  
+    .mobile-music-player {
+      display: flex !important; /* Force display only on mobile */
+    }
+  
+    /* Sidebar for Mobile */
+    .sidebar {
+      top: 0; /* Sidebar oben auf mobilen Geräten */
+      height: calc(100% - 50px); /* Höhe abzüglich der Höhe des mobilen Music Players */
+      bottom: 50px; /* Platz für den mobilen Music Player lassen */
+    }
+  }
+  
+  .mobile-controls {
+    display: flex;
+    align-items: center;
+  }
+  
+  .mobile-controls button {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    margin-right: 15px;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .mobile-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 10px;
+    overflow: hidden;
+    text-align: center;
+  }
+  
+  .mobile-player-title {
+    font-size: 18px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 250px;
+    margin-bottom: 5px;
+  }
+  
+  .mobile-info .timeplaceholder {
+    font-size: 16px;
+  }
+  
+  .mobile-volume {
+    display: flex;
+    align-items: center;
+  }
+  
+  .mobile-volume .volume-bar-container {
+    position: relative;
+    height: 10px;
+    width: 50px;
+    margin-right: 10px;
+    background: linear-gradient(to right, hsl(281, 100%, 65%), #8b888852);
+    overflow: hidden;
+    cursor: pointer;
+  }
+  
+  .mobile-volume .volume-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(255,255,255,0.2);
+  }
+  
+  .mobile-volume .volume-toggle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 18px;
+    background-color: black;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    z-index: 10;
+  }
+  
+  .mobile-volume .hamburger-btn {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }

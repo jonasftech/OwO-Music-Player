@@ -1,0 +1,47 @@
+body {
+	background-image: url('/img/musicplayer/clouds.jpg');
+    font-family: Arial, sans-serif;
+	color: #ffffff;
+}
+
+.ascii-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .ascii-name {
+    display: block;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    opacity: 0.5; /* Set the initial opacity */
+    animation: pulse 4s infinite; /* Set the animation properties */
+  }
+
+  @keyframes pulse {
+    0% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.5;
+    }
+  }
+  
+
+  @media (max-width: 768px) {
+    .ascii-name {
+      font-size: 12px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .ascii-name {
+      font-size: 8px;
+    }
+  }

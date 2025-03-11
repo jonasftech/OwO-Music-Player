@@ -1,0 +1,207 @@
+/* Set global styles */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+  }
+  
+  /* Music player general settings */
+  .music-player {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 25px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 20px;
+	background-color: #000;
+	font-family: Arial, sans-serif;
+	color: #fff;
+	z-index: 1000; /* Stellen Sie sicher, dass der Player über anderen Inhalten liegt */
+  }
+  
+  /* Hide the default audio controls */
+  #audio-player {
+	display: none;
+  }
+  
+  /* Left side of the music player */
+  .left-side {
+	display: flex;
+	align-items: center;
+  }
+  
+  .last-song-btn,
+  .play-pause-btn,
+  .next-song-btn {
+	background-color: transparent;
+	border: none;
+	color: #fff;
+	font-size: 16px;
+	margin-right: 20px;
+	cursor: pointer;
+  }
+  
+  .current-song-title {
+	font-size: 12px;
+	margin-right: 10px;
+  }
+  
+  .title-container {
+	max-width: 150px;
+  }
+  
+  .marquee {
+	width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+  }
+  
+  .marquee.active div {
+	display: inline-block;
+	padding-left: 100%;
+	animation: marquee 15s linear infinite;
+  }
+  
+  @keyframes marquee {
+	0%   { transform: translate(0, 0); }
+	100% { transform: translate(-100%, 0); }
+  }
+  
+  /* Middle of the music player */
+  .middle {
+	flex-grow: 1;
+	margin: 0 10px;
+  }
+  
+  .progress-bar-container {
+	position: relative;
+	height: 5px;
+	background-color: #fff;
+  }
+  
+  .progress-bar {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 0%;
+	background-color: #0263ff;
+  }
+  
+  .progress-toggle {
+	position: absolute;
+	top: -0.5px;
+	left: 0;
+	width: 6.8px;
+	height: 6.8px;
+	background-color: #fff;
+	border-radius: 0;
+	box-shadow: 0 0 2px rgba(0,0,0,0.3);
+	cursor: pointer;
+  }
+  
+  .buffered-bar {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 0%;
+	background-color: #4a4a4a;
+  }
+  
+  /* Right side of the music player */
+  .right-side {
+	display: flex;
+	align-items: center;
+  }
+  
+  .owoplaceholder {
+	color: #fff;
+	margin-right: 10px;
+	font-size: 12px;
+	font-family: Arial, sans-serif;
+  }
+  
+  .timeplaceholder {
+	color: #fff;
+	margin-right: 10px;
+	font-size: 12px;
+	font-family: Arial, sans-serif;
+  }
+  
+  .volume-bar-container {
+	position: relative;
+	height: 10px;
+	width: 70px;
+	border-radius: 5px;
+	margin-right: 20px;
+	background: linear-gradient(to right, hsl(281, 100%, 65%), #8b888852);
+	overflow: hidden;
+	cursor: pointer;
+  }
+  
+  .volume-bar {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 50%;
+	background-color: rgba(255,255,255,0.2);
+	border-radius: 0px;
+  }
+  
+  .volume-toggle {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 6px;
+	height: 12px;
+	background-color: black;
+	transform: translate(-50%, -50%);
+	cursor: pointer;
+	z-index: 10;
+  }
+  
+  .hamburger-btn {
+	background-color: transparent;
+	border: none;
+	color: #fff;
+	font-size: 16px;
+	cursor: pointer;
+  }
+  
+  /* Sidebar for Desktop */
+  .sidebar {
+	position: fixed;
+	top: 25px; /* Direkt unter dem Music Player */
+	right: -250px; /* Startet versteckt */
+	width: 250px;
+	height: calc(100% - 25px); /* Höhe abzüglich der Höhe des Music Players */
+	background: #111;
+	color: white;
+	padding: 10px;
+	transition: right 0.3s ease;
+	z-index: 1001; /* Stellen Sie sicher, dass die Sidebar über dem Music Player liegt */
+  }
+  
+  .sidebar h2 {
+	font-size: 14px;
+	margin-bottom: 10px;
+  }
+  
+  .playlist {
+	list-style: none;
+	padding: 0;
+  }
+  
+  .playlist li {
+	padding: 5px;
+	cursor: pointer;
+  }
+  
+  .playlist li.active {
+	background: #0263ff;
+  }
