@@ -1,108 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>(* ^ ω ^)</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<link rel="stylesheet" type="text/css" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-	<link rel="stylesheet" type="text/css" href="css/layout.css">
-	<link rel="stylesheet" type="text/css" href="css/mobile-style.css">
+    <title>(* ^ ω ^)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" type="text/css" href="css/layout.css">
+    <link rel="stylesheet" type="text/css" href="css/mobile-style.css">
 </head>
 <body>
-	<div class="music-player desktop-player">
-		<div class="left-side">
-			<button class="last-song-btn"><i class="ion-ios-skipbackward"></i></button>
-			<button class="play-pause-btn"><i class="ion-ios-play"></i></button>
-			<button class="next-song-btn"><i class="ion-ios-skipforward"></i></button>
-			<div class="title-container">
-				<div class="marquee">
-					<div class="current-song-title"></div>
-				</div>
-			  </div>
-		</div>
-		<div class="middle">
-			<div class="progress-bar-container">
-				<div class="buffered-bar"></div>
-				<div class="progress-bar"></div>
-				<div class="progress-toggle"></div>
-			</div>
-		</div>
-		<div class="right-side">
-			<div class="owoplaceholder"></div>
-			<div class="timeplaceholder"></div>
-			<div class="volume-bar-container">
-				<div class="volume-bar"></div>
-				<div class="volume-toggle"></div>
-			</div>
-			<button class="hamburger-btn"><i class="ion-navicon-round"></i></button>
-		</div>
-	</div>
+    <div class="music-player desktop-player">
+        <div class="left-side">
+            <button class="last-song-btn"><i class="ion-ios-skipbackward"></i></button>
+            <button class="play-pause-btn"><i class="ion-ios-play"></i></button>
+            <button class="next-song-btn"><i class="ion-ios-skipforward"></i></button>
+            <div class="title-container">
+                <div class="marquee">  <div class="current-song-title"></div>
+                </div>
+              </div>
+        </div>
+        <div class="middle">
+            <div class="progress-bar-container">
+                <div class="buffered-bar"></div>
+                <div class="progress-bar"></div>
+                <div class="progress-toggle"></div>
+            </div>
+        </div>
+        <div class="right-side">
+            <div class="owoplaceholder"></div>
+            <div class="timeplaceholder"></div>
+            <div class="volume-bar-container">
+                <div class="volume-bar"></div>
+                <div class="volume-toggle"></div>
+            </div>
+            <button class="hamburger-btn"><i class="ion-navicon-round"></i></button>
+        </div>
+    </div>
 
-	<div class="mobile-music-player">
-		<div class="mobile-controls">
-			<button class="last-song-btn"><i class="ion-ios-skipbackward"></i></button>
-			<button class="play-pause-btn"><i class="ion-ios-play"></i></button>
-			<button class="next-song-btn"><i class="ion-ios-skipforward"></i></button>
-		</div>
-		
-		<div class="mobile-info">
-			<div class="mobile-player-title">
-				OWO Music Player
-			</div>
-			<div class="timeplaceholder">00:00 | 00:00</div>
-		</div>
-		
-		<div class="mobile-volume">
-			<div class="volume-bar-container">
-				<div class="volume-bar"></div>
-				<div class="volume-toggle"></div>
-			</div>
-			<button class="hamburger-btn"><i class="ion-navicon-round"></i></button>
-		</div>
-	</div>
+    <div class="mobile-music-player">
+        <div class="mobile-controls">
+            <button class="last-song-btn"><i class="ion-ios-skipbackward"></i></button>
+            <button class="play-pause-btn"><i class="ion-ios-play"></i></button>
+            <button class="next-song-btn"><i class="ion-ios-skipforward"></i></button>
+        </div>
+        
+        <div class="mobile-info">
+            <div class="mobile-title-wrapper">   <div class="mobile-marquee">     <div class="mobile-player-title">
+                        OWO Music Player
+                    </div>
+                </div>
+            </div>
+            <div class="timeplaceholder">00:00 | 00:00</div>
+        </div>
+        
+        <div class="mobile-volume">
+            <div class="volume-bar-container">
+                <div class="volume-bar"></div>
+                <div class="volume-toggle"></div>
+            </div>
+            <button class="hamburger-btn"><i class="ion-navicon-round"></i></button>
+        </div>
+    </div>
 
-	<div class="sidebar">
-		<h2>Playlist</h2>
-		<ul class="playlist">
-		  <!-- Songs werden hier dynamisch hinzugefügt -->
-		</ul>
-	</div>
+    <div class="sidebar">
+        <h2>Playlist</h2>
+        <ul class="playlist">
+          </ul>
+    </div>
 
-	<audio id="music-player" hidden>
-	</audio>
-
-	<script>
-		const sidebar = document.querySelector(".sidebar");
-		const hamburgerBtn = document.querySelector(".hamburger-btn");
-		const playlistEl = document.querySelector(".playlist");
-	  
-		// Sidebar toggeln
-		hamburgerBtn.addEventListener("click", () => {
-		  sidebar.style.right = sidebar.style.right === "0px" ? "-250px" : "0px";
-		});
-	  
-		// Playlist dynamisch generieren
-		function updatePlaylist() {
-		  playlistEl.innerHTML = "";
-		  songs.forEach((song, index) => {
-			const li = document.createElement("li");
-			li.textContent = song.title;
-			if (index === currentSongIndex) {
-			  li.classList.add("active");
-			}
-			li.addEventListener("click", () => {
-			  currentSongIndex = index;
-			  playSong(true);
-			  updatePlaylist();
-			});
-			playlistEl.appendChild(li);
-		  });
-		}
-		
-		updatePlaylist();
-	</script>
-
-	<script src="js/script.js"></script>
+    <audio id="music-player" hidden>
+    </audio>
+    
+    <script src="js/script.js"></script>
 	<div class="ascii-wrapper">
 		<pre class="ascii-name">
 :::     :::     :::     ::::    ::: ::::::::::: ::::::::  :::    ::: :::::::::: :::::::::  
