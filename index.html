@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
 <head>
+    <meta charset="UTF-8">
     <title>(* ^ ω ^)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -11,11 +12,10 @@
 <body>
     <div class="music-player desktop-player">
         <div class="left-side">
-            <button class="last-song-btn"><i class="ion-ios-skipbackward"></i></button>
-            <button class="play-pause-btn"><i class="ion-ios-play"></i></button>
-            <button class="next-song-btn"><i class="ion-ios-skipforward"></i></button>
+            <button class="last-song-btn" aria-label="Previous Track"><i class="ion-ios-skipbackward" aria-hidden="true"></i></button>
+            <button class="play-pause-btn" aria-label="Play"><i class="ion-ios-play" aria-hidden="true"></i></button> <button class="next-song-btn" aria-label="Next Track"><i class="ion-ios-skipforward" aria-hidden="true"></i></button>
             <div class="title-container">
-                <div class="marquee">  <div class="current-song-title"></div>
+                <div class="marquee"> <div class="current-song-title"></div>
                 </div>
               </div>
         </div>
@@ -27,61 +27,57 @@
             </div>
         </div>
         <div class="right-side">
-            <div class="owoplaceholder"></div>
-            <div class="timeplaceholder"></div>
-            <div class="volume-bar-container">
+            <div class="owoplaceholder"></div> <div class="timeplaceholder"></div> <div class="volume-bar-container">
                 <div class="volume-bar"></div>
                 <div class="volume-toggle"></div>
             </div>
-            <button class="hamburger-btn"><i class="ion-navicon-round"></i></button>
+            <button class="hamburger-btn" aria-label="Toggle Playlist"><i class="ion-navicon-round" aria-hidden="true"></i></button>
         </div>
     </div>
 
     <div class="mobile-music-player">
         <div class="mobile-controls">
-            <button class="last-song-btn"><i class="ion-ios-skipbackward"></i></button>
-            <button class="play-pause-btn"><i class="ion-ios-play"></i></button>
-            <button class="next-song-btn"><i class="ion-ios-skipforward"></i></button>
+            <button class="last-song-btn" aria-label="Previous Track"><i class="ion-ios-skipbackward" aria-hidden="true"></i></button>
+            <button class="play-pause-btn" aria-label="Play"><i class="ion-ios-play" aria-hidden="true"></i></button> <button class="next-song-btn" aria-label="Next Track"><i class="ion-ios-skipforward" aria-hidden="true"></i></button>
         </div>
-        
+
         <div class="mobile-info">
             <div class="mobile-title-wrapper">   <div class="mobile-marquee">     <div class="mobile-player-title">
-                        OWO Music Player
-                    </div>
+                        OWO Music Player </div>
                 </div>
             </div>
-            <div class="timeplaceholder">00:00 | 00:00</div>
-        </div>
-        
+            <div class="timeplaceholder"></div> </div>
+
         <div class="mobile-volume">
             <div class="volume-bar-container">
                 <div class="volume-bar"></div>
                 <div class="volume-toggle"></div>
             </div>
-            <button class="hamburger-btn"><i class="ion-navicon-round"></i></button>
+            <button class="hamburger-btn" aria-label="Toggle Playlist"><i class="ion-navicon-round" aria-hidden="true"></i></button>
         </div>
     </div>
 
     <div class="sidebar">
-        <h2>Playlist</h2>
-        <ul class="playlist">
+        <h2>Playlist</h2> <ul class="playlist">
           </ul>
     </div>
 
-    <audio id="music-player" hidden>
+    <audio id="music-player" preload="metadata">
     </audio>
-    
-    <script src="js/script.js"></script>
-	<div class="ascii-wrapper">
-		<pre class="ascii-name">
-:::     :::     :::     ::::    ::: ::::::::::: ::::::::  :::    ::: :::::::::: :::::::::  
-:+:     :+:   :+: :+:   :+:+:   :+:     :+:    :+:    :+: :+:    :+: :+:        :+:    :+: 
-+:+     +:+  +:+   +:+  :+:+:+  +:+     +:+    +:+        +:+    +:+ +:+        +:+    +:+ 
-+#+     +:+ +#++:++#++: +#+ +:+ +#+     +#+    +#++:++#++ +#++:++#++ +#++:++#   +#+    +:+ 
- +#+   +#+  +#+     +#+ +#+  +#+#+#     +#+           +#+ +#+    +#+ +#+        +#+    +#+ 
-  #+#+#+#   #+#     #+# #+#   #+#+#     #+#    #+#    #+# #+#    #+# #+#        #+#    #+# 
-    ###     ###     ### ###    #### ########### ########  ###    ### ########## #########  
-		</pre>
-	</div>
+
+    <div class="ascii-wrapper">
+        <pre class="ascii-name" aria-hidden="true">
+:::     :::     :::     ::::    ::: ::::::::::: botched  :::    ::: :::::::::: :::::::::
+:+:     :+:   :+: :+:   :+:+:   :+:     :+:    :+:    :+: :+:    :+: :+:        :+:    :+:
++:+     +:+  +:+   +:+  :+:+:+  +:+     +:+    +:+        +:+    +:+ +:+        +:+    +:+
++#+     +:+ +#++:++#++: +#+ +:+ +#+     +#+    +#++:++#++ +#++:++#++ +#++:++#   +#+    +:+
+ +#+   +#+  +#+     +#+ +#+  +#+#+#     +#+           +#+ +#+    +#+ +#+        +#+    +#+
+  #+#+#+#   #+#     #+# #+#   #+#+#     #+#    #+#    #+# #+#    #+# #+#        #+#    #+#
+    ###     ###     ### ###    #### ########### ########  ###    ### ########## #########
+        </pre>
+    </div>
+
+    <script src="js/script.js" defer></script>
+
 </body>
 </html>
