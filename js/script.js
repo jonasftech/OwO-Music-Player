@@ -1,414 +1,369 @@
-// OWO Music Player v0.338
+// OWO Music Player v0.339
 // brought to you by
 
-//                                    o8o           oooo                        .o8  
-//oooo    ooo  .oooo.   ooo. .oo.   oooo   .oooo.o  888 .oo.    .ooooo.   .oooo888  
-//`88.  .8'  `P  )88b  `888P"Y88b  `888  d88(  "8  888P"Y88b  d88' `88b d88' `888  
-//`88..8'    .oP"888   888   888   888  `"Y88b.   888   888  888ooo888 888   888  
-//`888'    d8(  888   888   888   888  o.  )88b  888   888  888    .o 888   888  
-//`8'     `Y888""8o o888o o888o o888o 8""888P' o888o o888o `Y8bod8P' `Y8bod88P" 
+//                                    o8o           oooo                        .o8
+//oooo    ooo  .oooo.   ooo. .oo.   oooo   .oooo.o  888 .oo.    .ooooo.   .oooo888
+//`88.  .8'  `P  )88b  `888P"Y88b  `888  d88(  "8  888P"Y88b  d88' `88b d88' `888
+//`88..8'    .oP"888   888   888   888  `"Y88b.   888   888  888ooo888 888   888
+//`888'    d8(  888   888   888   888  o.  )88b  888   888  888    .o 888   888
+//`8'     `Y888""8o o888o o888o o888o 8""888P' o888o o888o `Y8bod8P' `Y8bod88P"
 
-const musicPlayer = document.querySelector("#music-player");
-let isPlaying = false;
-let currentSongIndex = 0;
-let pausedTime = 0;
+document.addEventListener('DOMContentLoaded', () => {
 
-const songs = [
-  {
-    title: "mirage tower",
-    src: "music/1.mp3",
-  },
-  {
-    title: "how to disappear¿?¿",
-    src: "music/2.mp3",
-  },
-  {
-    title: "untitled",
-    src: "music/3.mp3",
-  },
-  {
-    title: "avoid thinking",
-    src: "music/4.mp3",
-  },
-  {
-    title: "r u ok? <3",
-    src: "music/5.mp3",
-  },
-  {
-    title: ":3 ^-^ >.< :P xD o.O uwu",
-    src: "music/6.mp3",
-  },
-  {
-    title: "waaaaaaaaaa",
-    src: "music/7.mp3",
-  },
-  {
-    title: "I really want to see you again （*＾-＾*）",
-    src: "music/8.mp3",
-  },
-  {
-    title: "ten ｡･:*:･ﾟ★｡･:*:･ﾟ☆",
-    src: "music/9.mp3",
-  },
-  {
-    title: "cursed bunny awful mix",
-    src: "music/10.mp3",
-  },
-  {
-    title: "obsessed pt II",
-    src: "music/11.mp3",
-  },
-  {
-    title: "storm+strom",
-    src: "music/12.mp3",
-  },
-  {
-    title: "30 more",
-    src: "music/13.mp3",
-  },
-  {
-    title: "bat caves",
-    src: "music/14.mp3",
-  },
-  {
-    title: "obsessed",
-    src: "music/15.mp3",
-  },
-  {
-    title: "survival of the sickest",
-    src: "music/16.mp3",
-  },
-  {
-    title: "THE ETERNAL CYCLE OF LIFE",
-    src: "music/17.mp3",
-  },
-];
-
-// Desktop Controls
-const lastSongBtn = document.querySelector(".last-song-btn");
-const playPauseBtn = document.querySelector(".play-pause-btn");
-const nextSongBtn = document.querySelector(".next-song-btn");
-const currentSongTitle = document.querySelector(".current-song-title");
-const marquee = document.querySelector('.marquee');
-const timePlaceholder = document.querySelector('.timeplaceholder');
-
-// Mobile Controls
-const mobileLastSongBtn = document.querySelector(".mobile-controls .last-song-btn");
-const mobilePlayPauseBtn = document.querySelector(".mobile-controls .play-pause-btn");
-const mobileNextSongBtn = document.querySelector(".mobile-controls .next-song-btn");
-const mobileCurrentSongTitle = document.querySelector(".mobile-player-title");
-const mobileTimePlaceholder = document.querySelector(".mobile-info .timeplaceholder");
-
-// Marquee-Effekt für lange Titel
-function applyMarqueeEffect() {
-  if (currentSongTitle && currentSongTitle.textContent.length >= 25) {
-    marquee.classList.add('active');
-  } else if (marquee) {
-    marquee.classList.remove('active');
-  }
-}
-
-// Song abspielen
-function playSong(newSong = false) {
-  if (newSong) {
-    pausedTime = 0; // Nur zurücksetzen, wenn wirklich ein neuer Song startet
-  }
-  musicPlayer.src = songs[currentSongIndex].src;
-  musicPlayer.currentTime = pausedTime; // Verwende pausedTime, um den Song an der richtigen Stelle abzuspielen
-  musicPlayer.play();
-  isPlaying = true;
+    // --- Global Variables & Constants ---
+    const musicPlayer = document.getElementById("music-player");
+    const songs = [
+        // Songliste
+        { title: "mirage tower", src: "music/1.mp3", },
+        { title: "how to disappear¿?¿", src: "music/2.mp3", },
+        { title: "untitled", src: "music/3.mp3", },
+        { title: "avoid thinking", src: "music/4.mp3", },
+        { title: "r u ok? <3", src: "music/5.mp3", },
+        { title: ":3 ^-^ >.< :P xD o.O uwu", src: "music/6.mp3", },
+        { title: "waaaaaaaaaa", src: "music/7.mp3", },
+        { title: "I really want to see you again （*＾-＾*）", src: "music/8.mp3", },
+        { title: "ten ｡･:*:･ﾟ★｡･:*:･ﾟ☆", src: "music/9.mp3", },
+        { title: "cursed bunny awful mix", src: "music/10.mp3", },
+        { title: "obsessed pt II", src: "music/11.mp3", },
+        { title: "storm+strom", src: "music/12.mp3", },
+        { title: "30 more", src: "music/13.mp3", },
+        { title: "bat caves", src: "music/14.mp3", },
+        { title: "obsessed", src: "music/15.mp3", },
+        { title: "survival of the sickest", src: "music/16.mp3", },
+        { title: "THE ETERNAL CYCLE OF LIFE", src: "music/17.mp3", },
+    ];
+    let currentSongIndex = 0;
+    let isPlaying = false;
+    let pausedTime = 0;
+    let isDraggingProgress = false;
+    let isDraggingVolume = false;
+    let activeVolumeContainer = null; // Für Lautstärke-Drag relevant
   
-  // Update desktop play/pause button
-  if (playPauseBtn) {
-    playPauseBtn.innerHTML = "<i class='ion-ios-pause'></i>";
-  }
+    // --- DOM Element References ---
+    const playPauseBtns = document.querySelectorAll(".play-pause-btn");
+    const lastSongBtns = document.querySelectorAll(".last-song-btn");
+    const nextSongBtns = document.querySelectorAll(".next-song-btn");
+    const hamburgerBtns = document.querySelectorAll(".hamburger-btn");
   
-  // Update mobile play/pause button
-  if (mobilePlayPauseBtn) {
-    mobilePlayPauseBtn.innerHTML = "<i class='ion-ios-pause'></i>";
-  }
+    const desktopTitle = document.querySelector(".desktop-player .current-song-title");
+    const mobileTitle = document.querySelector(".mobile-player-title");
+    const marqueeContainer = document.querySelector('.desktop-player .marquee');
+    const mobileMarqueeContainer = document.querySelector('.mobile-info .mobile-marquee');
+    const timePlaceholders = document.querySelectorAll('.timeplaceholder');
   
-  // Update song titles
-  if (currentSongTitle) {
-    currentSongTitle.textContent = songs[currentSongIndex].title;
-  }
+    const progressBarContainer = document.querySelector(".progress-bar-container");
+    const progressBar = progressBarContainer?.querySelector(".progress-bar");
+    const progressToggle = progressBarContainer?.querySelector(".progress-toggle");
+    const bufferedBar = progressBarContainer?.querySelector('.buffered-bar');
   
-  applyMarqueeEffect();
-  updatePlaylist();
-}
-
-// Song pausieren
-function pauseSong() {
-  pausedTime = musicPlayer.currentTime; // Aktualisiere pausedTime, wenn der Song pausiert wird
-  musicPlayer.pause();
-  isPlaying = false;
+    const volumeContainers = document.querySelectorAll('.volume-bar-container');
+    const sidebar = document.querySelector(".sidebar");
+    const playlistEl = document.querySelector(".playlist");
+    const owoPlaceholder = document.querySelector('.owoplaceholder');
   
-  // Update desktop play/pause button
-  if (playPauseBtn) {
-    playPauseBtn.innerHTML = "<i class='ion-ios-play'></i>";
-  }
+    // --- UI Update Functions ---
+    function updatePlayPauseUI(playing) {
+        const iconClass = playing ? 'ion-ios-pause' : 'ion-ios-play';
+        playPauseBtns.forEach(btn => {
+            btn.innerHTML = `<i class='${iconClass}'></i>`;
+        });
+    }
+    function updateSongTitleUI(title) {
+        if (desktopTitle) desktopTitle.textContent = title;
+        if (mobileTitle) mobileTitle.textContent = title;
+        if (marqueeContainer && desktopTitle) {
+            marqueeContainer.classList.toggle('active', desktopTitle.textContent.length >= 25);
+        }
+        if (mobileMarqueeContainer && mobileTitle) {
+            mobileMarqueeContainer.classList.toggle('active', mobileTitle.textContent.length >= 15);
+        }
+    }
+    function formatTime(totalSeconds) {
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = Math.floor(totalSeconds % 60);
+        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+    function updateTimeUI(currentTime, duration) {
+        const currentTimeFormatted = formatTime(currentTime);
+        const durationFormatted = formatTime(duration || 0);
+        const text = `${currentTimeFormatted} | ${durationFormatted}`;
+        timePlaceholders.forEach(el => {
+            el.textContent = text;
+        });
+    }
+    function updateProgressBarUI(percent, bufferedPercent) {
+        if (progressBar) progressBar.style.width = `${percent}%`;
+        if (progressToggle) progressToggle.style.left = `${percent}%`;
+        if (bufferedBar) bufferedBar.style.width = `${bufferedPercent}%`;
+    }
+    function updateVolumeUI(volume) {
+        const percent = volume * 100;
+        volumeContainers.forEach(container => {
+            const bar = container.querySelector('.volume-bar');
+            const toggle = container.querySelector('.volume-toggle');
+            if (bar) bar.style.width = `${percent}%`;
+            if (toggle) toggle.style.left = `${percent}%`;
+        });
+    }
   
-  // Update mobile play/pause button
-  if (mobilePlayPauseBtn) {
-    mobilePlayPauseBtn.innerHTML = "<i class='ion-ios-play'></i>";
-  }
-}
-
-// Play/Pause-Toggle
-function togglePlayPause() {
-  if (isPlaying) {
-    pauseSong();
-  } else {
-    playSong();
-  }
-}
-
-// Nächsten Song abspielen
-function playNextSong() {
-  pausedTime = 0;
-  currentSongIndex++;
-  if (currentSongIndex >= songs.length) {
-    currentSongIndex = 0; // Neustart der Playlist
-  }
-  playSong(true);
-}
-
-function playLastSong() {
-  pausedTime = 0;
-  currentSongIndex--;
-  if (currentSongIndex < 0) {
-    currentSongIndex = songs.length - 1;
-  }
-  playSong(true);
-}
-
-// Fortschrittsbalken aktualisieren
-const progressBar = document.querySelector(".progress-bar");
-const progressToggle = document.querySelector(".progress-toggle");
-const bufferedBar = document.querySelector('.buffered-bar');
-
-function updateProgressBar() {
-  if (!musicPlayer.duration) return;
-
-  const progressPercent = (musicPlayer.currentTime / musicPlayer.duration) * 100;
+    // --- Core Playback Functions ---
+    function playSong(newSong = false) {
+        if (!songs.length) return;
+        if (newSong) pausedTime = 0;
+        const song = songs[currentSongIndex];
+        if (!musicPlayer.src || musicPlayer.src.split('/').pop() !== song.src.split('/').pop()) {
+            musicPlayer.src = song.src;
+        }
+        musicPlayer.currentTime = pausedTime;
+        musicPlayer.play().then(() => {
+             isPlaying = true;
+             updatePlayPauseUI(true);
+             updateSongTitleUI(song.title);
+             updatePlaylistActiveItem();
+        }).catch(error => {
+            isPlaying = false;
+            updatePlayPauseUI(false);
+        });
+    }
+    function pauseSong() {
+        if (!isPlaying) return;
+        pausedTime = musicPlayer.currentTime;
+        musicPlayer.pause();
+        isPlaying = false;
+        updatePlayPauseUI(false);
+    }
+    function togglePlayPause() {
+        if (isPlaying) {
+            pauseSong();
+        } else {
+            if (musicPlayer.readyState === 0 || musicPlayer.currentSrc === "") {
+                 playSong(true);
+            } else {
+                 playSong();
+            }
+        }
+    }
+    function playNextSong() {
+        if (!songs.length) return;
+        currentSongIndex = (currentSongIndex + 1) % songs.length;
+        playSong(true);
+    }
+    function playLastSong() {
+        if (!songs.length) return;
+        currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+        playSong(true);
+    }
   
-  if (progressBar) {
-    progressBar.style.width = `${progressPercent}%`;
-  }
+    // --- Progress Bar Handling ---
+    function handleProgressUpdate() {
+         if (!musicPlayer.duration || isDraggingProgress) return;
+         const progressPercent = (musicPlayer.currentTime / musicPlayer.duration) * 100;
+         let bufferedPercent = 0;
+         if (musicPlayer.buffered.length > 0) {
+              for (let i = 0; i < musicPlayer.buffered.length; i++) {
+                 if (musicPlayer.buffered.start(i) <= musicPlayer.currentTime && musicPlayer.buffered.end(i) >= musicPlayer.currentTime) {
+                     bufferedPercent = (musicPlayer.buffered.end(i) / musicPlayer.duration) * 100;
+                     break;
+                 }
+              }
+              if (bufferedPercent === 0 && musicPlayer.buffered.length > 0) {
+                  bufferedPercent = (musicPlayer.buffered.end(musicPlayer.buffered.length - 1) / musicPlayer.duration) * 100;
+              }
+         }
+         updateProgressBarUI(progressPercent, bufferedPercent);
+         updateTimeUI(musicPlayer.currentTime, musicPlayer.duration);
+    }
+    function setProgress(e) {
+        if (!musicPlayer.duration || !progressBarContainer) return;
+        const rect = progressBarContainer.getBoundingClientRect();
+        const clickX = e.clientX ?? e.touches?.[0]?.clientX ?? e.changedTouches?.[0]?.clientX ?? null;
+        if (clickX === null) return;
+        const clickPosition = clickX - rect.left;
+        const containerWidth = rect.width;
+        const percentage = Math.max(0, Math.min(1, clickPosition / containerWidth));
+        const newTime = percentage * musicPlayer.duration;
+        musicPlayer.currentTime = newTime;
+        pausedTime = newTime;
+        handleProgressUpdate();
+    }
   
-  if (progressToggle) {
-    progressToggle.style.left = `${progressPercent}%`;
-  }
-
-  if (musicPlayer.buffered.length > 0 && bufferedBar) {
-    const bufferedPercent = (musicPlayer.buffered.end(0) / musicPlayer.duration) * 100;
-    bufferedBar.style.width = `${bufferedPercent}%`;
-  }
-
-  // Zeit-Anzeige für Desktop und Mobile
-  const currentMinutes = Math.floor(musicPlayer.currentTime / 60);
-  const currentSeconds = Math.floor(musicPlayer.currentTime % 60);
-  const durationMinutes = Math.floor(musicPlayer.duration / 60);
-  const durationSeconds = Math.floor(musicPlayer.duration % 60);
-
-  const formatTime = (min, sec) => `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+    // --- Volume Control Handling ---
+    // Definiere die Drag-Handler außerhalb der Schleife
+    const handleVolumeDragMove = (e) => {
+        if (isDraggingVolume && activeVolumeContainer) {
+            setVolume(e, activeVolumeContainer);
+            e.preventDefault();
+        }
+    };
+    const handleVolumeDragEnd = () => {
+        if (isDraggingVolume) {
+            isDraggingVolume = false;
+            activeVolumeContainer = null;
+            document.body.style.userSelect = '';
+        }
+    };
   
-  if (timePlaceholder) {
-    timePlaceholder.textContent = `${formatTime(currentMinutes, currentSeconds)} | ${formatTime(durationMinutes, durationSeconds)}`;
-  }
+    // Funktion zum Berechnen und Setzen der Lautstärke
+    function setVolume(e, container) {
+        if (!container) return;
+        const rect = container.getBoundingClientRect();
+        let clientX = null;
+        if (e.type.startsWith('touch')) {
+            clientX = e.touches?.[0]?.clientX ?? e.changedTouches?.[0]?.clientX ?? null;
+        } else {
+            clientX = e.clientX;
+        }
+        if (clientX === null) {
+             return;
+        }
+        let percent = (clientX - rect.left) / rect.width;
+        percent = Math.max(0, Math.min(1, percent));
+        musicPlayer.volume = percent;
+        updateVolumeUI(percent);
+    }
   
-  if (mobileTimePlaceholder) {
-    mobileTimePlaceholder.textContent = `${formatTime(currentMinutes, currentSeconds)} | ${formatTime(durationMinutes, durationSeconds)}`;
-  }
-}
+    // Gehe durch jeden Volume-Container
+    volumeContainers.forEach(container => {
+        const toggle = container.querySelector('.volume-toggle');
+        const startVolumeDrag = (e) => {
+            isDraggingVolume = true;
+            activeVolumeContainer = container;
+            setVolume(e, activeVolumeContainer);
+            document.body.style.userSelect = 'none';
+        };
+  
+        container.addEventListener('mousedown', startVolumeDrag);
+        container.addEventListener('touchstart', (e) => {
+             if (e.target === container || e.target === toggle || container.contains(e.target)) {
+                 startVolumeDrag(e);
+             }
+        }, { passive: true });
+        container.addEventListener('click', (e) => {
+             if (!isDraggingVolume && e.target !== toggle && activeVolumeContainer === null) {
+                 setVolume(e, container);
+             }
+        });
+    });
+  
+    // Hänge die Move- und End-Listener NUR EINMAL an das document an
+    document.addEventListener('mousemove', handleVolumeDragMove);
+    document.addEventListener('mouseup', handleVolumeDragEnd);
+    document.addEventListener('touchmove', (e) => {
+        if (isDraggingVolume && activeVolumeContainer) {
+             e.preventDefault();
+             handleVolumeDragMove(e);
+        }
+    }, { passive: false });
+    document.addEventListener('touchend', handleVolumeDragEnd);
+  
+    // --- Playlist Handling ---
+    function updatePlaylistActiveItem() {
+        const items = playlistEl?.querySelectorAll("li");
+        items?.forEach((li, index) => {
+            li.classList.toggle("active", index === currentSongIndex);
+        });
+    }
+    function generatePlaylist() {
+        if (!playlistEl) return;
+        playlistEl.innerHTML = "";
+        songs.forEach((song, index) => {
+            const li = document.createElement("li");
+            li.textContent = song.title;
+            li.dataset.index = index;
+            li.addEventListener("click", () => {
+                const clickedIndex = parseInt(li.dataset.index, 10);
+                if (clickedIndex !== currentSongIndex || !isPlaying) {
+                     currentSongIndex = clickedIndex;
+                     playSong(true);
+                }
+            });
+            playlistEl.appendChild(li);
+        });
+        updatePlaylistActiveItem();
+    }
+  
+    // --- Sidebar Toggle ---
+    function toggleSidebar() {
+        if (!sidebar) return;
+        const computedStyle = window.getComputedStyle(sidebar);
+        const currentRight = computedStyle.right;
+        if (currentRight === "0px") {
+            sidebar.style.right = "-250px";
+        } else {
+            sidebar.style.right = "0px";
+        }
+    }
+  
+    // --- Progress Bar Event Listeners Setup ---
+     if (progressBarContainer) {
+        const startProgressDrag = (e) => {
+             if (!musicPlayer.duration) return;
+             isDraggingProgress = true;
+             setProgress(e);
+             document.body.style.userSelect = 'none';
+        };
+        const dragProgress = (e) => {
+            if (isDraggingProgress) { setProgress(e); e.preventDefault(); }
+        };
+        const endProgressDrag = () => {
+            if(isDraggingProgress) {
+                 isDraggingProgress = false;
+                 document.body.style.userSelect = '';
+            }
+        };
+  
+        progressBarContainer.addEventListener('mousedown', startProgressDrag);
+        progressBarContainer.addEventListener('touchstart', startProgressDrag, { passive: true });
+        progressBarContainer.addEventListener('click', (e) => {
+             if (!isDraggingProgress && e.target !== progressToggle) { setProgress(e); }
+        });
+        document.addEventListener('mousemove', dragProgress);
+        document.addEventListener('mouseup', endProgressDrag);
+        document.addEventListener('touchmove', (e) => { if(isDraggingProgress) {e.preventDefault(); dragProgress(e);} }, { passive: false });
+        document.addEventListener('touchend', endProgressDrag);
+    }
+  
+    // --- Event Listeners (Play, Nav, Hamburger) ---
+    playPauseBtns.forEach(btn => btn.addEventListener("click", togglePlayPause));
+    lastSongBtns.forEach(btn => btn.addEventListener("click", playLastSong));
+    nextSongBtns.forEach(btn => btn.addEventListener("click", playNextSong));
+    hamburgerBtns.forEach(btn => btn.addEventListener("click", toggleSidebar));
+  
+    // --- Audio Player Events ---
+    musicPlayer.addEventListener("timeupdate", handleProgressUpdate);
+    musicPlayer.addEventListener("ended", playNextSong);
+    musicPlayer.addEventListener("loadedmetadata", handleProgressUpdate);
+    musicPlayer.addEventListener("loadstart", () => {
+         updateProgressBarUI(0,0);
+         updateTimeUI(0,0);
+    });
+    musicPlayer.addEventListener("error", (e) => {
+        isPlaying = false;
+        updatePlayPauseUI(false);
+        updateSongTitleUI("Error loading song");
+    });
+  
+    // --- Initialization ---
+    if (owoPlaceholder) { owoPlaceholder.textContent = 'OWO Music Player'; }
+    musicPlayer.volume = 0.5;
+    updateVolumeUI(musicPlayer.volume);
+    updateTimeUI(0, 0);
+    generatePlaylist();
 
-const progressBarContainer = document.querySelector(".progress-bar-container");
+    if (songs.length > 0) {
+        // updateSongTitleUI(songs[0].title); // Titel wird nicht sofort angezeigt
 
-function setProgress(e) {
-  if (!musicPlayer.duration) return;
+        // --- Code zum Vorladen des ersten Songs ---
+        if (!musicPlayer.currentSrc) {
+            musicPlayer.src = songs[0].src;
+        }
+        // --- Ende Code zum Vorladen ---
 
-  const rect = progressBarContainer.getBoundingClientRect();
-  const clickPosition = e.clientX - rect.left;
-  const containerWidth = rect.width;
-  const percentage = (clickPosition / containerWidth);
+    } else {
+        // Meldung für keine Songs
+        updateSongTitleUI("No songs loaded");
+        if(mobileTitle) mobileTitle.textContent = "No songs loaded";
+    }
+    updatePlayPauseUI(false); // Setzt initialen UI-Status auf Pause
 
-  const newTime = Math.max(0, Math.min(1, percentage)) * musicPlayer.duration;
-
-  musicPlayer.currentTime = newTime;
-  pausedTime = newTime; // Aktualisiere pausedTime, wenn der Fortschrittsbalken geändert wird
-}
-
-// Drag and Drop für Fortschrittsleiste
-let isDraggingProgress = false;
-
-progressBarContainer.addEventListener('mousedown', (e) => {
-  isDraggingProgress = true;
-  setProgress(e);
-});
-
-document.addEventListener('mousemove', (e) => {
-  if (isDraggingProgress) {
-    setProgress(e);
-  }
-});
-
-document.addEventListener('mouseup', () => {
-  isDraggingProgress = false;
-});
-
-progressBarContainer.addEventListener('click', setProgress);
-
-// Automatischen Wechsel zum nächsten Song aktivieren
-musicPlayer.addEventListener("ended", playNextSong);
-
-// Lautstärkeregler für Desktop
-const volumeBar = document.querySelector(".volume-bar");
-const volumeToggle = document.querySelector(".volume-toggle");
-const volumeBarContainer = document.querySelector(".volume-bar-container");
-
-let isDraggingVolume = false;
-
-// Funktion zum Aktualisieren der Lautstärke
-function setVolume(e) {
-  const rect = volumeBarContainer.getBoundingClientRect();
-  let percent = (e.clientX - rect.left) / rect.width;
-  percent = Math.max(0, Math.min(1, percent)); // Begrenzen auf 0 - 1
-  musicPlayer.volume = percent;
-  volumeBar.style.width = `${percent * 100}%`;
-  volumeToggle.style.left = `${percent * 100}%`;
-}
-
-// Event-Listener für das Ziehen des Reglers
-volumeToggle.addEventListener("mousedown", () => {
-  isDraggingVolume = true;
-});
-
-document.addEventListener("mousemove", (e) => {
-  if (isDraggingVolume) {
-    setVolume(e);
-  }
-});
-
-document.addEventListener("mouseup", () => {
-  isDraggingVolume = false;
-});
-
-// Event-Listener für das Klicken auf die Lautstärkeleiste
-volumeBarContainer.addEventListener("click", setVolume);
-
-// Initiale Lautstärke setzen (50%)
-musicPlayer.volume = 0.5;
-volumeBar.style.width = "50%";
-volumeToggle.style.left = "50%";
-
-// Lautstärkeregler für Mobile
-const mobileVolumeBar = document.querySelector(".mobile-volume .volume-bar");
-const mobileVolumeToggle = document.querySelector(".mobile-volume .volume-toggle");
-const mobileVolumeBarContainer = document.querySelector(".mobile-volume .volume-bar-container");
-
-let isDraggingMobileVolume = false;
-
-// Funktion zum Aktualisieren der mobilen Lautstärke
-function setMobileVolume(e) {
-  const rect = mobileVolumeBarContainer.getBoundingClientRect();
-  // Get the X position from either mouse or touch event
-  const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : e.changedTouches[0].clientX);
-  let percent = (clientX - rect.left) / rect.width;
-  percent = Math.max(0, Math.min(1, percent)); // Begrenzen auf 0 - 1
-  musicPlayer.volume = percent;
-  mobileVolumeBar.style.width = `${percent * 100}%`;
-  mobileVolumeToggle.style.left = `${percent * 100}%`;
-}
-
-// Event-Listener für das Ziehen des mobilen Reglers
-mobileVolumeToggle.addEventListener("mousedown", () => {
-  isDraggingMobileVolume = true;
-});
-
-document.addEventListener("mousemove", (e) => {
-  if (isDraggingMobileVolume) {
-    setMobileVolume(e);
-  }
-});
-
-document.addEventListener("mouseup", () => {
-  isDraggingMobileVolume = false;
-});
-
-// Event-Listener für das Ziehen des mobilen Reglers - Touch Events
-mobileVolumeToggle.addEventListener("touchstart", (e) => {
-  isDraggingMobileVolume = true;
-  e.preventDefault(); // Prevent scrolling when touching the toggle
-});
-
-document.addEventListener("touchmove", (e) => {
-  if (isDraggingMobileVolume) {
-    setMobileVolume(e);
-    e.preventDefault(); // Prevent scrolling while dragging
-  }
-});
-
-document.addEventListener("touchend", () => {
-  isDraggingMobileVolume = false;
-});
-
-// Event-Listener für das Klicken auf die mobile Lautstärkeleiste
-mobileVolumeBarContainer.addEventListener("click", setMobileVolume);
-mobileVolumeBarContainer.addEventListener("touchend", (e) => {
-  // Only trigger if it wasn't a drag operation
-  if (!isDraggingMobileVolume) {
-    setMobileVolume(e);
-  }
-});
-
-// Initiale Lautstärke setzen (50%)
-mobileVolumeBar.style.width = "50%";
-mobileVolumeToggle.style.left = "50%";
-
-// Sidebar für Mobile
-const mobileHamburgerBtn = document.querySelector(".mobile-volume .hamburger-btn");
-
-mobileHamburgerBtn.addEventListener("click", () => {
-  const sidebar = document.querySelector(".sidebar");
-  sidebar.style.right = sidebar.style.right === "0px" ? "-250px" : "0px";
-});
-
-// Desktop Event-Listener
-if (playPauseBtn) {
-  playPauseBtn.addEventListener("click", togglePlayPause);
-}
-
-if (lastSongBtn) {
-  lastSongBtn.addEventListener("click", playLastSong);
-}
-
-if (nextSongBtn) {
-  nextSongBtn.addEventListener("click", playNextSong);
-}
-
-// Mobile Event-Listener
-if (mobilePlayPauseBtn) {
-  mobilePlayPauseBtn.addEventListener("click", togglePlayPause);
-}
-
-if (mobileLastSongBtn) {
-  mobileLastSongBtn.addEventListener("click", playLastSong);
-}
-
-if (mobileNextSongBtn) {
-  mobileNextSongBtn.addEventListener("click", playNextSong);
-}
-
-musicPlayer.addEventListener("timeupdate", updateProgressBar);
-
-// Platzhalter-Texte setzen
-const owoPlaceholder = document.querySelector('.owoplaceholder');
-if (owoPlaceholder) {
-  owoPlaceholder.textContent = 'OWO Music Player';
-}
-
-// Initial playlist generation
-updatePlaylist();
-
-// Start first song
-// playSong();
+    }); // Ende von DOMContentLoaded Listener
