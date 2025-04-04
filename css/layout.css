@@ -132,6 +132,18 @@
     font-size: 12px;
     font-family: Arial, sans-serif;
   }
+
+  .desktop-player .timeplaceholder {
+    display: none;
+  }
+
+  .desktop-player.playback-started .timeplaceholder {
+    display: block;
+  }
+  
+  .desktop-player {
+    display: flex;
+  }
   
   .volume-bar-container {
     position: relative;
