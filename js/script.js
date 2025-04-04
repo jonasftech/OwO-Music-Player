@@ -38,29 +38,32 @@ document.addEventListener('DOMContentLoaded', () => {
     let isDraggingProgress = false;
     let isDraggingVolume = false;
     let activeVolumeContainer = null; // Für Lautstärke-Drag relevant
-  
+    let initialPlaybackHasStarted = false; // Flag für erste Wiedergabe (Desktop/Mobile Zeit)
+
     // --- DOM Element References ---
     const playPauseBtns = document.querySelectorAll(".play-pause-btn");
     const lastSongBtns = document.querySelectorAll(".last-song-btn");
     const nextSongBtns = document.querySelectorAll(".next-song-btn");
     const hamburgerBtns = document.querySelectorAll(".hamburger-btn");
-  
+
+    const desktopPlayerElement = document.querySelector(".desktop-player"); // Referenz für Desktop-Player Zeit-Anzeige
+    const mobilePlayerElement = document.querySelector(".mobile-music-player"); // Referenz für Mobile-Player Zeit-Anzeige
     const desktopTitle = document.querySelector(".desktop-player .current-song-title");
     const mobileTitle = document.querySelector(".mobile-player-title");
     const marqueeContainer = document.querySelector('.desktop-player .marquee');
     const mobileMarqueeContainer = document.querySelector('.mobile-info .mobile-marquee');
-    const timePlaceholders = document.querySelectorAll('.timeplaceholder');
-  
+    const timePlaceholders = document.querySelectorAll('.timeplaceholder'); // Holt beide (Desktop+Mobile)
+
     const progressBarContainer = document.querySelector(".progress-bar-container");
     const progressBar = progressBarContainer?.querySelector(".progress-bar");
     const progressToggle = progressBarContainer?.querySelector(".progress-toggle");
     const bufferedBar = progressBarContainer?.querySelector('.buffered-bar');
-  
+
     const volumeContainers = document.querySelectorAll('.volume-bar-container');
     const sidebar = document.querySelector(".sidebar");
     const playlistEl = document.querySelector(".playlist");
     const owoPlaceholder = document.querySelector('.owoplaceholder');
-  
+
     // --- UI Update Functions ---
     function updatePlayPauseUI(playing) {
         const iconClass = playing ? 'ion-ios-pause' : 'ion-ios-play';
@@ -70,12 +73,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     function updateSongTitleUI(title) {
         if (desktopTitle) desktopTitle.textContent = title;
-        if (mobileTitle) mobileTitle.textContent = title;
+        if (mobileTitle) mobileTitle.textContent = title; // Überschreibt initiales "OWO Music Player"
+
+        // Marquee Logik
         if (marqueeContainer && desktopTitle) {
             marqueeContainer.classList.toggle('active', desktopTitle.textContent.length >= 25);
         }
         if (mobileMarqueeContainer && mobileTitle) {
-            mobileMarqueeContainer.classList.toggle('active', mobileTitle.textContent.length >= 15);
+             mobileMarqueeContainer.classList.toggle('active', mobileTitle.textContent.length >= 15);
         }
     }
     function formatTime(totalSeconds) {
@@ -87,6 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentTimeFormatted = formatTime(currentTime);
         const durationFormatted = formatTime(duration || 0);
         const text = `${currentTimeFormatted} | ${durationFormatted}`;
+        // Update alle Zeit-Platzhalter (auch die anfangs unsichtbaren)
         timePlaceholders.forEach(el => {
             el.textContent = text;
         });
@@ -105,24 +111,44 @@ document.addEventListener('DOMContentLoaded', () => {
             if (toggle) toggle.style.left = `${percent}%`;
         });
     }
-  
+
     // --- Core Playback Functions ---
     function playSong(newSong = false) {
         if (!songs.length) return;
         if (newSong) pausedTime = 0;
+
         const song = songs[currentSongIndex];
+
         if (!musicPlayer.src || musicPlayer.src.split('/').pop() !== song.src.split('/').pop()) {
             musicPlayer.src = song.src;
         }
+
         musicPlayer.currentTime = pausedTime;
+
         musicPlayer.play().then(() => {
              isPlaying = true;
              updatePlayPauseUI(true);
              updateSongTitleUI(song.title);
              updatePlaylistActiveItem();
+
+             // Klasse für Zeit-Anzeige hinzufügen, nur beim allerersten Start
+             if (!initialPlaybackHasStarted) {
+                 // Für Desktop
+                 if (desktopPlayerElement) {
+                     desktopPlayerElement.classList.add('playback-started');
+                 }
+                 // Für Mobile
+                 if (mobilePlayerElement) {
+                     mobilePlayerElement.classList.add('playback-started');
+                 }
+                 initialPlaybackHasStarted = true;
+             }
+             // --- ENDE Anpassung für Zeit-Anzeige ---
+
         }).catch(error => {
-            isPlaying = false;
-            updatePlayPauseUI(false);
+             console.error("Playback Error:", error);
+             isPlaying = false;
+             updatePlayPauseUI(false);
         });
     }
     function pauseSong() {
@@ -136,11 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isPlaying) {
             pauseSong();
         } else {
-            if (musicPlayer.readyState === 0 || musicPlayer.currentSrc === "") {
-                 playSong(true);
-            } else {
-                 playSong();
-            }
+            playSong(musicPlayer.readyState === 0 || musicPlayer.currentSrc === "");
         }
     }
     function playNextSong() {
@@ -150,15 +172,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     function playLastSong() {
         if (!songs.length) return;
-        currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-        playSong(true);
+        if (musicPlayer.currentTime > 3 && isPlaying) {
+             musicPlayer.currentTime = 0;
+             pausedTime = 0;
+             playSong();
+        } else {
+             currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+             playSong(true);
+        }
     }
-  
+
     // --- Progress Bar Handling ---
     function handleProgressUpdate() {
          if (!musicPlayer.duration || isDraggingProgress) return;
+
          const progressPercent = (musicPlayer.currentTime / musicPlayer.duration) * 100;
          let bufferedPercent = 0;
+
          if (musicPlayer.buffered.length > 0) {
               for (let i = 0; i < musicPlayer.buffered.length; i++) {
                  if (musicPlayer.buffered.start(i) <= musicPlayer.currentTime && musicPlayer.buffered.end(i) >= musicPlayer.currentTime) {
@@ -170,25 +200,28 @@ document.addEventListener('DOMContentLoaded', () => {
                   bufferedPercent = (musicPlayer.buffered.end(musicPlayer.buffered.length - 1) / musicPlayer.duration) * 100;
               }
          }
+
          updateProgressBarUI(progressPercent, bufferedPercent);
          updateTimeUI(musicPlayer.currentTime, musicPlayer.duration);
     }
     function setProgress(e) {
         if (!musicPlayer.duration || !progressBarContainer) return;
+
         const rect = progressBarContainer.getBoundingClientRect();
         const clickX = e.clientX ?? e.touches?.[0]?.clientX ?? e.changedTouches?.[0]?.clientX ?? null;
         if (clickX === null) return;
+
         const clickPosition = clickX - rect.left;
         const containerWidth = rect.width;
         const percentage = Math.max(0, Math.min(1, clickPosition / containerWidth));
+
         const newTime = percentage * musicPlayer.duration;
         musicPlayer.currentTime = newTime;
         pausedTime = newTime;
         handleProgressUpdate();
     }
-  
+
     // --- Volume Control Handling ---
-    // Definiere die Drag-Handler außerhalb der Schleife
     const handleVolumeDragMove = (e) => {
         if (isDraggingVolume && activeVolumeContainer) {
             setVolume(e, activeVolumeContainer);
@@ -202,36 +235,39 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.style.userSelect = '';
         }
     };
-  
-    // Funktion zum Berechnen und Setzen der Lautstärke
+
     function setVolume(e, container) {
         if (!container) return;
         const rect = container.getBoundingClientRect();
         let clientX = null;
+
         if (e.type.startsWith('touch')) {
             clientX = e.touches?.[0]?.clientX ?? e.changedTouches?.[0]?.clientX ?? null;
         } else {
             clientX = e.clientX;
         }
+
         if (clientX === null) {
              return;
         }
+
         let percent = (clientX - rect.left) / rect.width;
         percent = Math.max(0, Math.min(1, percent));
+
         musicPlayer.volume = percent;
         updateVolumeUI(percent);
     }
-  
-    // Gehe durch jeden Volume-Container
+
     volumeContainers.forEach(container => {
         const toggle = container.querySelector('.volume-toggle');
+
         const startVolumeDrag = (e) => {
             isDraggingVolume = true;
             activeVolumeContainer = container;
             setVolume(e, activeVolumeContainer);
             document.body.style.userSelect = 'none';
         };
-  
+
         container.addEventListener('mousedown', startVolumeDrag);
         container.addEventListener('touchstart', (e) => {
              if (e.target === container || e.target === toggle || container.contains(e.target)) {
@@ -244,18 +280,16 @@ document.addEventListener('DOMContentLoaded', () => {
              }
         });
     });
-  
-    // Hänge die Move- und End-Listener NUR EINMAL an das document an
+
     document.addEventListener('mousemove', handleVolumeDragMove);
     document.addEventListener('mouseup', handleVolumeDragEnd);
     document.addEventListener('touchmove', (e) => {
         if (isDraggingVolume && activeVolumeContainer) {
-             e.preventDefault();
              handleVolumeDragMove(e);
         }
     }, { passive: false });
     document.addEventListener('touchend', handleVolumeDragEnd);
-  
+
     // --- Playlist Handling ---
     function updatePlaylistActiveItem() {
         const items = playlistEl?.querySelectorAll("li");
@@ -281,19 +315,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         updatePlaylistActiveItem();
     }
-  
+
     // --- Sidebar Toggle ---
     function toggleSidebar() {
         if (!sidebar) return;
         const computedStyle = window.getComputedStyle(sidebar);
         const currentRight = computedStyle.right;
-        if (currentRight === "0px") {
-            sidebar.style.right = "-250px";
-        } else {
-            sidebar.style.right = "0px";
-        }
+        sidebar.style.right = (currentRight === "0px") ? "-250px" : "0px";
     }
-  
+
     // --- Progress Bar Event Listeners Setup ---
      if (progressBarContainer) {
         const startProgressDrag = (e) => {
@@ -303,7 +333,10 @@ document.addEventListener('DOMContentLoaded', () => {
              document.body.style.userSelect = 'none';
         };
         const dragProgress = (e) => {
-            if (isDraggingProgress) { setProgress(e); e.preventDefault(); }
+            if (isDraggingProgress) {
+                 setProgress(e);
+                 e.preventDefault();
+            }
         };
         const endProgressDrag = () => {
             if(isDraggingProgress) {
@@ -311,43 +344,50 @@ document.addEventListener('DOMContentLoaded', () => {
                  document.body.style.userSelect = '';
             }
         };
-  
+
         progressBarContainer.addEventListener('mousedown', startProgressDrag);
         progressBarContainer.addEventListener('touchstart', startProgressDrag, { passive: true });
         progressBarContainer.addEventListener('click', (e) => {
-             if (!isDraggingProgress && e.target !== progressToggle) { setProgress(e); }
+             if (!isDraggingProgress && e.target !== progressToggle) {
+                 setProgress(e);
+             }
         });
         document.addEventListener('mousemove', dragProgress);
         document.addEventListener('mouseup', endProgressDrag);
-        document.addEventListener('touchmove', (e) => { if(isDraggingProgress) {e.preventDefault(); dragProgress(e);} }, { passive: false });
+        document.addEventListener('touchmove', (e) => {
+             if(isDraggingProgress) {
+                 dragProgress(e);
+             }
+        }, { passive: false });
         document.addEventListener('touchend', endProgressDrag);
     }
-  
+
     // --- Event Listeners (Play, Nav, Hamburger) ---
     playPauseBtns.forEach(btn => btn.addEventListener("click", togglePlayPause));
     lastSongBtns.forEach(btn => btn.addEventListener("click", playLastSong));
     nextSongBtns.forEach(btn => btn.addEventListener("click", playNextSong));
     hamburgerBtns.forEach(btn => btn.addEventListener("click", toggleSidebar));
-  
+
     // --- Audio Player Events ---
     musicPlayer.addEventListener("timeupdate", handleProgressUpdate);
     musicPlayer.addEventListener("ended", playNextSong);
     musicPlayer.addEventListener("loadedmetadata", handleProgressUpdate);
     musicPlayer.addEventListener("loadstart", () => {
-         updateProgressBarUI(0,0);
-         updateTimeUI(0,0);
+         updateProgressBarUI(0, 0);
+         updateTimeUI(0, 0);
     });
     musicPlayer.addEventListener("error", (e) => {
+        console.error("Audio Player Error:", e);
         isPlaying = false;
         updatePlayPauseUI(false);
         updateSongTitleUI("Error loading song");
     });
-  
+
     // --- Initialization ---
     if (owoPlaceholder) { owoPlaceholder.textContent = 'OWO Music Player'; }
     musicPlayer.volume = 0.5;
     updateVolumeUI(musicPlayer.volume);
-    updateTimeUI(0, 0);
+    updateTimeUI(0, 0); // Setzt Zeit initial auf 00:00 | 00:00 (wird durch CSS versteckt)
     generatePlaylist();
 
     if (songs.length > 0) {
@@ -362,8 +402,8 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         // Meldung für keine Songs
         updateSongTitleUI("No songs loaded");
-        if(mobileTitle) mobileTitle.textContent = "No songs loaded";
+        if(mobileTitle) mobileTitle.textContent = "No songs loaded"; // Auch für Mobile
     }
     updatePlayPauseUI(false); // Setzt initialen UI-Status auf Pause
 
-    }); // Ende von DOMContentLoaded Listener
+}); // Ende von DOMContentLoaded Listener
