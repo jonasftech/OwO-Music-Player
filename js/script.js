@@ -374,7 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
     musicPlayer.addEventListener("loadedmetadata", handleProgressUpdate);
     musicPlayer.addEventListener("loadstart", () => {
          updateProgressBarUI(0, 0);
-         updateTimeUI(0, 0);
+         // updateTimeUI(0, 0);
     });
     musicPlayer.addEventListener("error", (e) => {
         console.error("Audio Player Error:", e);
