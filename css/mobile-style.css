@@ -15,19 +15,23 @@
 }
 
 @media (max-width: 768px) {
+  .ascii-wrapper {
+    padding-top: 0;
+    padding-bottom: 37.5px;
+}
+
   .desktop-player {
       display: none !important;
   }
 
   .mobile-music-player {
-      display: flex !important; /* Force display only on mobile */
+      display: flex !important;
   }
 
-  /* Sidebar for Mobile */
   .sidebar {
-      top: 0; /* Sidebar oben auf mobilen Geräten */
-      height: calc(100% - 37.5px); /* Höhe abzüglich der Höhe des mobilen Music Players */
-      bottom: 37.5px; /* Platz für den mobilen Music Player lassen */
+      top: 0;
+      height: calc(100% - 37.5px);
+      bottom: 37.5px;
   }
 }
 
