@@ -19,7 +19,7 @@
     background-color: #000;
     font-family: Arial, sans-serif;
     color: #fff;
-    z-index: 1000; /* Stellen Sie sicher, dass der Player über anderen Inhalten liegt */
+    z-index: 1000;
   }
   
   /* Hide the default audio controls */
@@ -186,18 +186,18 @@
     cursor: pointer;
   }
   
-  /* Sidebar for Desktop */
   .sidebar {
     position: fixed;
-    top: 25px; /* Direkt unter dem Music Player */
-    right: -250px; /* Startet versteckt */
+    top: 25px;
+    right: -250px;
     width: 250px;
-    height: calc(100% - 25px); /* Höhe abzüglich der Höhe des Music Players */
+    height: calc(100% - 25px);
     background: #111;
     color: white;
     padding: 10px;
     transition: right 0.3s ease;
-    z-index: 1001; /* Stellen Sie sicher, dass die Sidebar über dem Music Player liegt */
+    z-index: 1001;
+    overflow-y: auto;
   }
   
   .sidebar h2 {
